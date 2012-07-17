@@ -67,7 +67,7 @@ class PyElastic(object):
             raise Exception(response.content)
             
 
-    def delete(self, path):
+    def delete_index(self, path):
         response = requests.delete(self.generate_url(path))
         return json.loads(response.text)
 
@@ -95,8 +95,6 @@ class PyElastic(object):
         else:
             requests.put(self.generate_url(index))
 
-    def index_document(self, index, data, type_es, identifier, bulk=None):
-        if bulk:
-            open(bulk, 'r')
+    def index_document(self, index, data, type_es, identifier):
         response = requests.post(self.generate_url(index) + '/%s/%s?refresh=True' % (type_es, identifier), data)
         return json.loads(response.text)

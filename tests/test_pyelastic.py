@@ -9,12 +9,11 @@ class TestPyElastic(unittest2.TestCase):
     
     def setUp(cls):
         cls.client = PyElastic(host="localhost", port="1980")
-        cls.client.create_index("example-index")
         cls.client.index_document("example", '{"example": "Lorem Ipsum"}', "example1", "example1")
-        cls.client.delete("example-index")
 
     def tearDown(cls):
-        cls.client.delete("example")
+        cls.client.delete_index("example")
+        cls.client.delete_index("example-index")
     
     def test_should_get_documents(self):
         response = self.client.get_index("example")['hits']['hits'][0]['_source']
@@ -45,4 +44,4 @@ class TestPyElastic(unittest2.TestCase):
         response_es = self.client.get_index("es_example")["hits"]["hits"][0]["_source"]["es_example"]
 
         self.assertEqual("Simple Test", response_es)
-        self.client.delete("es_example")
+        self.client.delete_index("es_example")
