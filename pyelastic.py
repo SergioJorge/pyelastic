@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import requests
 import json
-import os
+import logging
 
 
 class PyElastic(object):
@@ -76,17 +76,11 @@ class PyElastic(object):
         id_scroll = self._get_uri_scroll(index, amount_documents)
 
         documents = self._get_documents_with_id_scroll(index, id_scroll)
-        log_dir = os.path.exists("logs")
-        if log_dir == False:
-            os.mkdir("logs")
-        archive_log = open('logs/errors_update_%s.log' % index, 'w')
         for document in documents:
             field_id = document['_id']
             field_type = document['_type']
-
             if not self._update(index, field_id, field_type, json):
-                archive_log.write("Error update the documents: %s/%s/%s" % (index, field_type, field_id))
-        archive_log.close()
+                logging.error("Error update the documents: %s/%s/%s" % (index, field_type, field_id))
 
     def create_index(self, index, number_shards=None, number_replicas=None):
         if number_shards and number_replicas:
