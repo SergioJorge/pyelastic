@@ -16,6 +16,7 @@ Features
 ========
 
 - Create Index/delete
+- Index Document
 - Update field of all documents in a single index
 - Get settings of index
 

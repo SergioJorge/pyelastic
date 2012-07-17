@@ -12,7 +12,8 @@ class PyElastic(object):
         self.port = port
 
     def _get_amount_documents(self, index):
-        amount_documents = requests.get(self.generate_url(index) + "/_count")
+        parameters = self.generate_url(index) + "/_count"
+        amount_documents = requests.get(parameters)
         if amount_documents.ok:
             result = json.loads(amount_documents.content)['count']
             return result
@@ -22,12 +23,14 @@ class PyElastic(object):
 
     def _get_uri_scroll(self, index, amount_documents):
         """
-        URL of the documentation using scroll to return so eficient 
+        URL of the documentation using scroll to return so eficient
         large amount of documents.
 
-        http://www.elasticsearch.org/guide/reference/api/search/search-type.html section SCAN
+        http://www.elasticsearch.org/guide/reference/api/search
+        /search-type.html section SCAN
         """
-        uri_scroll_id = self.generate_url(index) + "/_search?search_type=scan&scroll=10m&size=%s" % (amount_documents)
+        parameters = "/_search?search_type=scan&scroll=10m&size=%s" % (amount_documents)
+        uri_scroll_id = self.generate_url(index) + parameters
         scroll_documents = requests.get(uri_scroll_id)
         if scroll_documents.ok:
             return json.loads(scroll_documents.content)['_scroll_id']
@@ -43,7 +46,8 @@ class PyElastic(object):
             raise Exception("An error occurred when retrieving documents.")
 
     def _update(self, index, field_id, field_type, json):
-        uri_update = self.generate_url(index) + "/%s/%s/_update" % (field_type, field_id)
+        parameters = "/%s/%s/_update" % (field_type, field_id)
+        uri_update = self.generate_url(index) + parameters
         response = requests.post(uri_update, data=json)
         return response.ok
 
@@ -65,7 +69,6 @@ class PyElastic(object):
             return json.loads(response.text)
         else:
             raise Exception(response.content)
-            
 
     def delete_index(self, path):
         response = requests.delete(self.generate_url(path))
@@ -84,11 +87,14 @@ class PyElastic(object):
 
     def create_index(self, index, number_shards=None, number_replicas=None):
         if number_shards and number_replicas:
-            settings = '{"settings": {"index":{"number_of_shards": %d, "number_of_replicas": %d }}}' % (number_shards, number_replicas)
+            settings = '''
+            {"settings": {"index":{"number_of_shards": %d, "number_of_replicas": %d }}}
+            ''' % (number_shards, number_replicas)
             requests.put(self.generate_url(index), data=settings)
         else:
             requests.put(self.generate_url(index))
 
     def index_document(self, index, data, type_es, identifier):
-        response = requests.post(self.generate_url(index) + '/%s/%s?refresh=True' % (type_es, identifier), data)
+        parameters = '/%s/%s?refresh=True' % (type_es, identifier)
+        response = requests.post(self.generate_url(index) + parameters, data)
         return json.loads(response.text)
