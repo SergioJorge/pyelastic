@@ -3,7 +3,7 @@
 =============================
 
 
-:Source: http://github.com/aparo/pyes/
+:Source: http://github.com/SegioJorge/pyelastic/
 :Keywords: search, elastisearch
 
 --
