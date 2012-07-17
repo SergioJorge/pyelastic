@@ -3,7 +3,7 @@
 =============================
 
 
-:Source: http://github.com/SegioJorge/pyelastic/
+:Source: http://github.com/SergioJorge/pyelastic
 :Keywords: search, elastisearch
 
 --
