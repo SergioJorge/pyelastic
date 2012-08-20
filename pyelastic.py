@@ -29,13 +29,15 @@ class PyElastic(object):
         http://www.elasticsearch.org/guide/reference/api/search
         /search-type.html section SCAN
         """
-        parameters = "/_search?search_type=scan&scroll=10m&size=%s" % (amount_documents)
+        parameters = ("/_search?search_type="
+                     "scan&scroll=10m&size=%s" % (amount_documents))
         uri_scroll_id = self.generate_url(index) + parameters
         scroll_documents = requests.get(uri_scroll_id)
         if scroll_documents.ok:
             return json.loads(scroll_documents.content)['_scroll_id']
         else:
-            raise Exception("There was an error retrieving the ID of the scroll")
+            raise Exception("There was an error retrieving"
+                            "the ID of the scroll")
 
     def _get_documents_with_id_scroll(self, index, id_scroll):
         uri_scroll = self.generate_url() + "_search/scroll?scroll=10m"
@@ -83,12 +85,15 @@ class PyElastic(object):
             field_id = document['_id']
             field_type = document['_type']
             if not self._update(index, field_id, field_type, json):
-                logging.error("Error update the documents: %s/%s/%s" % (index, field_type, field_id))
+                logging.error("Error update"
+                 "the documents: %s/%s/%s" % (index, field_type, field_id))
 
     def create_index(self, index, number_shards=None, number_replicas=None):
         if number_shards and number_replicas:
             settings = '''
-            {"settings": {"index":{"number_of_shards": %d, "number_of_replicas": %d }}}
+            {"settings": {
+                "index":{"number_of_shards": %d,
+                "number_of_replicas": %d }}}
             ''' % (number_shards, number_replicas)
             requests.put(self.generate_url(index), data=settings)
         else:
@@ -98,3 +103,4 @@ class PyElastic(object):
         parameters = '/%s/%s?refresh=True' % (type_es, identifier)
         response = requests.post(self.generate_url(index) + parameters, data)
         return json.loads(response.text)
+
