@@ -5,7 +5,7 @@
 
 :Source: http://github.com/SergioJorge/pyelastic
 :Keywords: search, elastisearch
-:Pypi: http://pypi.python.org/pypi/PyElastic/0.0.1
+:Pypi: http://pypi.python.org/pypi/PyElastic
 
 PyElastic is a connector to use elasticsearch from python.
 
