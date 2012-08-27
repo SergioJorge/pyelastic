@@ -24,4 +24,4 @@ Features
 TODO
 ----
 
-- add bulk support
+- create alias
