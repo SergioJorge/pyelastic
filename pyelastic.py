@@ -30,7 +30,7 @@ class PyElastic(object):
         /search-type.html section SCAN
         """
         parameters = ("/_search?search_type="
-                     "scan&scroll=10m&size=%s" % (amount_documents))
+                      "scan&scroll=10m&size=%s" % (amount_documents))
         uri_scroll_id = self.generate_url(index) + parameters
         scroll_documents = requests.get(uri_scroll_id)
         if scroll_documents.ok:
@@ -86,7 +86,9 @@ class PyElastic(object):
             field_type = document['_type']
             if not self._update(index, field_id, field_type, json):
                 logging.error("Error update"
-                 "the documents: %s/%s/%s" % (index, field_type, field_id))
+                              "the documents: %s/%s/%s" % (index,
+                                                           field_type,
+                                                           field_id))
 
     def create_index(self, index, number_shards=None, number_replicas=None):
         if number_shards and number_replicas:
@@ -103,4 +105,3 @@ class PyElastic(object):
         parameters = '/%s/%s?refresh=True' % (type_es, identifier)
         response = requests.post(self.generate_url(index) + parameters, data)
         return json.loads(response.text)
-
