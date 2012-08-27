@@ -105,3 +105,9 @@ class PyElastic(object):
         parameters = '/%s/%s?refresh=True' % (type_es, identifier)
         response = requests.post(self.generate_url(index) + parameters, data)
         return json.loads(response.text)
+
+    def multisearch(self, bulk):
+        bulk = bulk.replace(" ", "")
+        path = self.generate_url() + "_msearch"
+        responses = requests.post(path, bulk)
+        return json.loads(responses.content)

@@ -45,3 +45,19 @@ class TestPyElastic(unittest2.TestCase):
 
         self.assertEqual("Simple Test", response_es)
         self.client.delete_index("es_example")
+
+    def test_should_make_multisearch(self):
+        self.client.create_index("example")
+        self.client.create_index("example-index")
+        self.client.index_document("example-index", '{"example": "Lorem Ipsum Lorem Ipsum"}', "example2", "example2")
+        bulk = '''
+        {"index": "example"}
+        {"query": {"match_all" : {}}, "from" : 0, "size" : 10}
+        {"index": "example-index"}
+        {"query": {"match_all" : {}}, "from" : 0, "size" : 10}
+        '''
+        responses = self.client.multisearch(bulk)
+        query1 = responses['responses'][0]['hits']['hits'][0]['_source']
+        query2 = responses['responses'][1]['hits']['hits'][0]['_source']
+        self.assertEqual({'example': 'Lorem Ipsum'}, query1)
+        self.assertEqual({'example': 'Lorem Ipsum Lorem Ipsum'}, query2)
