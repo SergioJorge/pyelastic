@@ -6,7 +6,6 @@
 :Source: http://github.com/SergioJorge/pyelastic
 :Keywords: search, elastisearch
 
---
 
 PyElastic is a connector to use elasticsearch from python.
 
@@ -25,3 +24,4 @@ TODO
 ----
 
 - add bulk support
+- add multisearch
