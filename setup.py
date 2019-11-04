@@ -16,5 +16,5 @@ setup(name='PyElastic',
       packages=find_packages(exclude=['testes']),
       include_package_data=True,
       zip_safe=True,
-      install_requires=['requests==0.13.1'],
+      install_requires=['requests==2.20.0'],
       )
